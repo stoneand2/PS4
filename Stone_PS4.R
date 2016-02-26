@@ -56,9 +56,45 @@ main.table[,"Winner popular vote (%)"] <- as.numeric(gsub(pattern="%", replaceme
 main.table[,"Winner Margin (%)"] <- as.numeric(gsub(pattern="%", replacement="", 
                                                           x=main.table[,"Winner Margin (%)"])) / 100
 
+# Ordering by year
+main.table <- main.table[with(main.table, order(Year)),]
 
-# pdf(file="trends.pdf")
-# dev.off()
+pdf(file="trends.pdf")
+
+# Share of popular vote of Democrats and Republicans over time
+main.table$"Runner up share (%)" <- main.table[,"Winner popular vote (%)"]  - 
+                                        main.table[,"Winner Margin (%)"]
+# Democrat winners
+plot(main.table$Year[which(main.table$"Winner Party" == "Dem.")], 
+     main.table$"Winner popular vote (%)"[which(main.table$"Winner Party" == "Dem.")],
+     xaxt="n", 
+     ylim=c(0.35, 0.65), 
+     pch=17, 
+     col="blue", 
+     xlab="Year",
+     ylab="Popular vote share (%)", 
+     main="Figure 1: Popular Vote Shares of Winning D/R Presidential Candidates Over Time", 
+     cex.main=1)
+axis(side=1, labels=c(1824, 1860, 1900, 1940, 1980, 2016), at=c(1824, 1860, 1900, 1940, 1980, 2016))
+
+lines(sort(main.table$Year[which(main.table$"Winner Party" == "Dem.")]), 
+      y = main.table$"Winner popular vote (%)"[which(main.table$"Winner Party" == "Dem.")], 
+      type = "l", col="blue", lty=2)
+# Republican winners
+points(main.table$Year[which(main.table$"Winner Party" == "Rep.")], 
+     main.table$"Winner popular vote (%)"[which(main.table$"Winner Party" == "Rep.")],
+     pch=16, 
+     col="red")
+lines(sort(main.table$Year[which(main.table$"Winner Party" == "Rep.")]), 
+      y = main.table$"Winner popular vote (%)"[which(main.table$"Winner Party" == "Rep.")], 
+      type = "l", col="red", lty=2)
+
+legend("topleft",
+       legend=c("Democrats", "Republicans"), 
+       pch=c(17,16),
+       col=c("blue", "red"), cex=0.8)
+
+dev.off()
 
 
 
