@@ -220,4 +220,43 @@ dev.off()
 
 
 # Scraping electoral college votes won by candidates
+electoralcollege_URL <- "https://en.wikipedia.org/wiki/United_States_presidential_election"
+
+ec.table.nodes <- electoralcollege_URL %>% 
+  read_html %>%
+  html_nodes("table")
+
+# Subsetting all found table nodes to find the one we want, and then using html_table() to read it in
+ec.table <- html_table(ec.table.nodes[[3]])
+
+# Cleaning the data
+
+# Getting rid of "th", "st", or "rd" from election numbers
+ec.table$Order <- gsub("[[:alpha:]]*", "", ec.table$Order)
+
+# Renaming column to match with original dataset, will help with merging later on
+colnames(ec.table)[1] <- "Election Number"
+
+# Removing names and other info to just get electoral vote total of winner
+ec.table$WinnerECVotes <- str_extract(ec.table$Winner, "[0-9]{1,3}")
+
+# Removing names and other info to just get electoral vote total of runner up
+# By default, str_extract() will only grab the first instance of the pattern, which is always the
+# runner-ups vote total
+ec.table$RunnerUpECVotes <- str_extract(ec.table$"Other major candidates[27]", "[0-9]{1,3}")
+
+# Subset of new data to match years of original data
+ec.table <- ec.table[10:57,]
+
+# Subsetting new data to only have two new variables of interest, plut variable to match on
+ec.table <- ec.table[,c("Election Number","WinnerECVotes", "RunnerUpECVotes")]
+
+# Merging datasets
+full.dataset <- merge(main.table, ec.table, by="Election Number")
+
+
+
+
+
+
 
