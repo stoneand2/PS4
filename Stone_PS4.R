@@ -254,6 +254,12 @@ ec.table <- ec.table[,c("Election Number","WinnerECVotes", "RunnerUpECVotes")]
 # Merging datasets
 full.dataset <- merge(main.table, ec.table, by="Election Number")
 
+# Saving as .RData file
+save("full.dataset", file = "FinalElectionsData.Rdata")
+
+
+
+
 
 
 
