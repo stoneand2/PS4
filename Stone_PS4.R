@@ -61,9 +61,8 @@ main.table <- main.table[with(main.table, order(Year)),]
 
 pdf(file="trends.pdf")
 
-# Share of popular vote of Democrats and Republicans over time
-main.table$"Runner up share (%)" <- main.table[,"Winner popular vote (%)"]  - 
-                                        main.table[,"Winner Margin (%)"]
+# Plot 1: Popular Vote Shares of Winning Democrats and Republicans Over Time
+
 # Democrat winners
 plot(main.table$Year[which(main.table$"Winner Party" == "Dem.")], 
      main.table$"Winner popular vote (%)"[which(main.table$"Winner Party" == "Dem.")],
@@ -77,7 +76,7 @@ plot(main.table$Year[which(main.table$"Winner Party" == "Dem.")],
      cex.main=1)
 axis(side=1, labels=c(1824, 1860, 1900, 1940, 1980, 2016), at=c(1824, 1860, 1900, 1940, 1980, 2016))
 
-lines(sort(main.table$Year[which(main.table$"Winner Party" == "Dem.")]), 
+lines(main.table$Year[which(main.table$"Winner Party" == "Dem.")], 
       y = main.table$"Winner popular vote (%)"[which(main.table$"Winner Party" == "Dem.")], 
       type = "l", col="blue", lty=2)
 # Republican winners
@@ -85,7 +84,7 @@ points(main.table$Year[which(main.table$"Winner Party" == "Rep.")],
      main.table$"Winner popular vote (%)"[which(main.table$"Winner Party" == "Rep.")],
      pch=16, 
      col="red")
-lines(sort(main.table$Year[which(main.table$"Winner Party" == "Rep.")]), 
+lines(main.table$Year[which(main.table$"Winner Party" == "Rep.")], 
       y = main.table$"Winner popular vote (%)"[which(main.table$"Winner Party" == "Rep.")], 
       type = "l", col="red", lty=2)
 
@@ -93,6 +92,40 @@ legend("topleft",
        legend=c("Democrats", "Republicans"), 
        pch=c(17,16),
        col=c("blue", "red"), cex=0.8)
+
+
+# Plot 2: Winning Margin Over Time, Differentiating by Margins more/less than 10% of total vote
+
+plot(main.table$Year[which(main.table$"Winner Margin (%)" > .1)], 
+     main.table$"Winner Margin (total)"[which(main.table$"Winner Margin (%)" > .1)],
+     xaxt="n", 
+     yaxt="n",
+     xlim=c(1820, 2016),
+     ylim=c(-600000,20000000),
+     pch=17, 
+     col="steelblue4", 
+     xlab="Year",
+     ylab="Winner margin (millions of votes)", 
+     main="Figure 2: Winning Margin of Presidential Candidates Over Time", 
+     cex.main=1)
+abline(0,0)
+axis(side=1, 
+     labels=c(1824, 1860, 1900, 1940, 1980, 2016), 
+     at=c(1824, 1860, 1900, 1940, 1980, 2016))
+axis(side=2, 
+     labels=seq(from=-1, to=20, by=2), 
+     at=c(seq(from=-1000000, to=20000000, by=2000000)))
+lines(main.table$Year, 
+      main.table$"Winner Margin (total)", 
+      lty=1)
+points(main.table$Year[which(main.table$"Winner Margin (%)" <= .1)], 
+       main.table$"Winner Margin (total)"[which(main.table$"Winner Margin (%)" <= .1)], 
+       pch=16, col="sienna2")
+
+legend("topleft",
+       legend=c("Margin > 10% of All Votes", "Margin <= 10% of All Votes"), 
+       pch=c(17,16),
+       col=c("steelblue4", "sienna2"), cex=0.8)
 
 dev.off()
 
