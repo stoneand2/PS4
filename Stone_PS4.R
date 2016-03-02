@@ -286,6 +286,7 @@ ec.table$WinnerECVotes <- str_extract(ec.table$Winner, "[0-9]{1,3}")
 # Removing names and other info to just get electoral vote total of runner up
 # By default, str_extract() will only grab the first instance of the pattern, which is always the
 # runner-ups vote total
+# I don't include the 3rd place, etc. candidates, as they aren't runners up
 ec.table$RunnerUpECVotes <- str_extract(ec.table$"Other major candidates[27]", "[0-9]{1,3}")
 
 # Subset of new data to match years of original data
