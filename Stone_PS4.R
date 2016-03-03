@@ -289,7 +289,7 @@ ec.table$WinnerECVotes <- str_extract(ec.table$Winner, "[0-9]{1,3}")
 # I don't include the 3rd place, etc. candidates, as they aren't runners up
 ec.table$RunnerUpECVotes <- str_extract(ec.table$"Other major candidates[27]", "[0-9]{1,3}")
 
-# Subset of new data to match years of original data
+# Subset of new data to match years of original data 
 ec.table <- ec.table[10:57,]
 
 # Subsetting new data to only have two new variables of interest, plut variable to match on
